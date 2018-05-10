@@ -480,6 +480,10 @@ finally:
 
 # READ A FILE
 # Read a single text file
+# r 只讀模式檔案必須存在
+# w 只寫模式檔案不存在則建立檔案，檔案存在則清空檔案內容
+# x 只寫模式檔案不可讀，檔案不存在則建立，存在則報錯
+# a 追加模式檔案不存在建立檔案，檔案存在則在檔案末尾新增內容
 #input_file = sys.argv[1]
 
 ## Read a text file (older method) ##
@@ -489,6 +493,7 @@ finally:
 #    print("{}".format(row.strip()))
 #filereader.close()
 
+#another Output #141:
 #print("Output #141:")
 #filereader = open('input_file.txt'encoding = 'utf8')
 #for row in filereader:
@@ -509,6 +514,13 @@ finally:
 #    with open(input_file, 'r', newline='') as filereader:
 #       for row in filereader:
 #           print("{}".format(row.strip()))
+
+#another output #143
+#with open('letters.txt') as filereader,open('numbers.txt') as filereader1:
+#    for row in filereader:
+#        print("{}".format(row.strip()))
+#    for row in filereader1:
+#        print("{}".format(row.strip()))
 
 # WRITE TO A FILE
 # Write to a text file
