@@ -1,0 +1,28 @@
+import pymysql
+import requests
+from bs4 import BeautifulSoup
+conn = pymysql.connect(
+     host="120.113.70.236",
+     user="root",
+     passwd="nfu123@@@",
+     db="currency2"
+     )
+#查詢前，必須先獲取游標
+
+
+cursor = conn.cursor()
+
+cursor.execute ("""create table if not exists papabug(幣別 varchar(50), 現金匯率_本行買入 varchar(50), 現金匯率_本行賣出 varchar(50), 即期匯率_本行買入 varchar(50))""")
+
+
+cursor.execute("SELECT * FROM papabug")
+res = requests.get('https://rate.bot.com.tw/xrt?Lang=zh-TW')
+soup = BeautifulSoup(res.text,"html.parser")
+tables = soup.find_all('table')
+tab = tables[0]
+for td in tab.tbody.findall('td'):
+     for tr in tr.findall('td'):
+          text = td.getText().encode()
+cursor.close()
+conn.commit()
+conn.close()
