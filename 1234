@@ -1,0 +1,44 @@
+import pymysql
+import requests
+from bs4 import BeautifulSoup
+from datetime import datetime
+
+conn = pymysql.connect(
+     host="120.113.70.236",
+     user="root",
+     passwd="nfu123@@@",
+     db="currency2"
+     )
+
+#查詢前，必須先獲取游標
+
+cursor = conn.cursor()
+#cursor.execute ("""create table if not exists Hong(幣別 varchar(255), 現金匯率_本行買入 varchar(255), 現金匯率_本行賣出 varchar(255), 即期匯率_本行買入 varchar(255), 即期匯率_本行賣出 varchar(255),工作時間排程 varchar(255))""")
+
+today = datetime.now().strftime('%Y-%m-%d')
+#cursor.execute("SELECT * FROM papabug")
+res = requests.get('https://rate.bot.com.tw/xrt?Lang=zh-TW')
+soup = BeautifulSoup(res.text,"html.parser")
+
+rows = soup.find('table','table')
+trs = rows.find_all('tr')
+
+results = []
+tmp = []
+for tr in trs:
+    tds = tr.find_all('td')
+    #print(len(trs))
+    tmp.append(tds)
+
+results.append(tmp)
+print(results)
+
+
+sql = "INSERT INTO currency2.Hong (幣別,現金匯率_本行買入,現金匯率_本行賣出,即期匯率_本行買入,即期匯率_本行賣出,工作時間排程) VALUES (%s,%s,%s,%s,%s,%s)"
+val = (results, today)
+cursor.execute(sql, val)
+
+conn.commit()
+cursor.close()
+conn.commit()
+conn.close()
